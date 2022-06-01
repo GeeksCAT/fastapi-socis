@@ -24,7 +24,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
     db_user = models.User(
         email=user.email,
-        username=user.username,
+        # username=user.username,  # to be uncommented
         hashed_password=hashed_password,
     )
     db.add(db_user)
@@ -33,20 +33,22 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-def get_enrolments(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Enrolment).offset(skip).limit(limit).all()
+#########################
 
+def get_acts(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Act).offset(skip).limit(limit).all()
 
-def get_enrolments_by_user(db: Session, user:schemas.User):
-    return db.query(models.Enrolment).filter(models.Enrolment.owner == user)
+def get_acts_by_user(db: Session, user: schemas.User):
+    return db.query(models.Act).filter(models.Act.owner == user).all()
 
-def create_enrolment(db: Session, enrolment: schemas.Enrolment, user: schemas.User):
-    db_enrolment = models.Enrolment(
-        start_date=enrolment.start_date,
-        end_date=(enrolment.start_date + relativedelta(years=1)),
-        owner_id=user.id
+def create_act(db: Session, act: schemas.ActCreate, user: schemas.User):
+    db_act = models.Act(
+        name=act.name,
+        description=act.description,
+        link=act.link,
+        user_id=user.id
     )
-    db.add(db_enrolment)
+    db.add(db_act)
     db.commit()
-    db.refresh(db_enrolment)
-    return db_enrolment
+    db.refresh(db_act)
+    return db_act
