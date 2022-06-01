@@ -1,26 +1,57 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
-from database import Base
+from db.base_class import Base
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now())
 
-    items = relationship("Item", back_populates="owner")
+    # User may have many Enrolments
+    enrolments = relationship("Enrolment", back_populates="owner")
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Enrolment(Base):
+    __tablename__ = "enrolment"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    start_date = Column(Date)
+    end_date = Column(Date)
+    auto_renew = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
 
-    owner = relationship("User", back_populates="items")
+    owner_id = Column(Integer, ForeignKey("user.id"))
+
+    owner = relationship("User", back_populates="enrolments")
+
+
+# class PaymentLog(Base):
+#     id
+#     amount
+#     is_paid
+#     requested_at
+#     paid_at
+
+
+# class Event(Base):
+#     name
+#     description
+#     date
+
+
+# class Act(Base):
+#     ___tablename__ = "acts"
+
+#     name
+#     description
+#     link
+#     created_at
