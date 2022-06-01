@@ -1,25 +1,11 @@
-from pydantic import BaseModel
-
-
-class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
-    id: int
-    owner_id: int
-
-    class Config:
-        orm_mode = True
+from typing import List, Optional, Union
+from pydantic import BaseModel, EmailStr
+from datetime import datetime, date
 
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
+    username: str
 
 
 class UserCreate(UserBase):
@@ -28,8 +14,39 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+
     is_active: bool
-    items: list[Item] = []
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+####################
+
+
+class EnrolmentBase(BaseModel):
+    start_date: date
+
+
+class EnrolmentCreate(EnrolmentBase):
+    start_date: date
+    username: Optional[str]
+    email: Optional[EmailStr]
+
+
+class EnrolmentQuery(BaseModel):
+    start_date: Optional[date]
+    username: Optional[str]
+    email: Optional[EmailStr]
+
+
+class Enrolment(EnrolmentBase):
+    auto_renew: bool
+    end_date: date
+    owner: User
+    created_at: datetime
 
     class Config:
         orm_mode = True
