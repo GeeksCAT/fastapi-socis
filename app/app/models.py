@@ -9,49 +9,26 @@ class User(Base):
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+    username = Column(String)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
 
     # User may have many Enrolments
-    enrolments = relationship("Enrolment", back_populates="owner")
+    acts = relationship("Act", back_populates="owner")
 
 
-class Enrolment(Base):
-    __tablename__ = "enrolment"
+class Act(Base):
+    __tablename__ = "act"
 
     id = Column(Integer, primary_key=True, index=True)
-    start_date = Column(Date)
-    end_date = Column(Date)
-    auto_renew = Column(Boolean, default=True)
+    name = Column(String)
+    description = Column(String)
+    link = Column(String)
     created_at = Column(DateTime, default=func.now())
 
-    owner_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("user.id"))
 
-    owner = relationship("User", back_populates="enrolments")
-
-
-# class PaymentLog(Base):
-#     id
-#     amount
-#     is_paid
-#     requested_at
-#     paid_at
-
-
-# class Event(Base):
-#     name
-#     description
-#     date
-
-
-# class Act(Base):
-#     ___tablename__ = "acts"
-
-#     name
-#     description
-#     link
-#     created_at
+    owner = relationship("User", back_populates="acts")

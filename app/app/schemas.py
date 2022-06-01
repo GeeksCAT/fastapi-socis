@@ -5,7 +5,7 @@ from datetime import datetime, date
 
 class UserBase(BaseModel):
     email: EmailStr
-    username: str
+    username: Optional[str]  # to be commented
 
 
 class UserCreate(UserBase):
@@ -26,25 +26,26 @@ class User(UserBase):
 ####################
 
 
-class EnrolmentBase(BaseModel):
-    start_date: date
+class ActBase(BaseModel):
+    name: str
 
 
-class EnrolmentCreate(EnrolmentBase):
-    start_date: date
+class ActCreate(ActBase):
+    name: str
+    description: str
+    link: str
+    user_email: EmailStr
+
+
+class ActQuery(BaseModel):
     username: Optional[str]
     email: Optional[EmailStr]
 
 
-class EnrolmentQuery(BaseModel):
-    start_date: Optional[date]
-    username: Optional[str]
-    email: Optional[EmailStr]
-
-
-class Enrolment(EnrolmentBase):
-    auto_renew: bool
-    end_date: date
+class Act(ActBase):
+    id: int
+    description: str
+    link: str
     owner: User
     created_at: datetime
 
