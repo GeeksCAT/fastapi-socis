@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 import bcrypt
-import models, schemas
+from app import models, schemas
 from dateutil.relativedelta import relativedelta
 
 

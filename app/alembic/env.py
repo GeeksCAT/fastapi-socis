@@ -19,7 +19,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 # target_metadata = None
-from app.db.base import Base
+from db.base import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -27,7 +27,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-from app.db.base_class import SQLALCHEMY_DATABASE_URL
+from db.base_class import SQLALCHEMY_DATABASE_URL
 def get_url():
     return SQLALCHEMY_DATABASE_URL
 
